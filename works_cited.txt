@@ -1,0 +1,9 @@
+Works Cited
+How to use D3 drag properly? https://stackoverflow.com/questions/64596035/how-to-use-d3-js-drag-properly 
+Circle intersection points https://stackoverflow.com/questions/12219802/a-javascript-function-that-returns-the-x-y-points-of-intersection-between-two-ci
+Get attributes from elements https://stackoverflow.com/questions/43646573/d3-get-attributes-from-element/43646752
+SVG Circles info https://developer.mozilla.org/en-US/docs/Web/API/SVGCircleElement/cx
+D3 Collision detection https://alexzywiak.github.io/modelling-collision-detection-in-d3/index.html
+Materialize docs https://materializecss.com
+Observable animal data notebook
+Dragging circles example https://bl.ocks.org/puzzler10/9159a992f58aa4277c2583fa41f01ed0 

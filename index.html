@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>
+  </head>
+
+  <body>
+    <h3>South Bay Restaurant Searcher</h3>
+    <h6>By Kate Glazko</h6>
+
+  <div class = "row">
+  <div class="col s12">
+  	    <p>
+      <label>
+        <input type="checkbox" />
+        <span>Show Failures Only</span>
+      </label>
+    </p>
+
+
+  </div>
+</div>
+	<div class = "row">
+
+    <button class="btn waves-effect waves-light" id='a_plus' data-filter='a_plus' style='background-color: gray'>
+      Circle A Radius  <i class="material-icons left">add</i>
+    </button>
+
+    <button class="btn waves-effect waves-light" id='a_minus' data-filter='a_minus' style='background-color: gray'>
+      Circle A Radius <i class="material-icons left">remove</i>
+    </button>
+
+    <button class="btn waves-effect waves-light" id='b_plus' data-filter='b_plus' style='background-color: gray'>
+      + Circle B Radius
+    </button>
+
+    <button class="btn waves-effect waves-light" id='b_minus' data-filter='b_minus' style='background-color: gray'>
+      - Circle B Radius
+    </button>
+   </div>
+    <div id ="restaurant-vis"></div>
+
+    <script>
+
+// Define checkbox global variable
+var failuresSelected = false;
+
+// Define circle radii
+var circleARadius = 100;
+var circleBRadius = 100;
+
+// Track CX
+var circleACx = 200;
+var circleACy = 200;
+
+var circleBCx = 300;
+var circleBCy = 300;
+
+// Set up size
+var mapWidth = 1000;
+var mapHeight = 750;
+
+// Set up projection that the map is using
+var scale = 190000;
+var projection = d3.geoMercator()
+    .center([-122.061578, 37.385532])
+    .scale(scale)
+    .translate([mapWidth / 2, mapHeight / 2]);
+
+// This is the mapping between <longitude, latitude> position to <x, y> pixel position on the map
+// projection is a function and it has an inverse:
+// projection([lon, lat]) returns [x, y]
+// projection.invert([x, y]) returns [lon, lat]
+
+// Add an SVG element to the DOM
+var svg = d3.select('div#restaurant-vis').append('svg')
+    .attr('width', mapWidth)
+    .attr('height', mapHeight);
+
+// Add SVG map at correct size, assuming map is saved in a subdirectory called `data`
+svg.append('image')
+    .attr('width', mapWidth)
+    .attr('height', mapHeight)
+    .attr('xlink:href', 'data/map.svg');
+
+//Load the animals.csv data assuming it is locally in the same
+//directory as this file. You can replace "animals.csv" with the
+//URL "https://magrawala.github.io/cs448b-fa20/assets/docs/animals.csv"
+//to load the data from the URL directly.
+restaurantData = d3.csv("data.csv",
+    function(d) {
+        return {
+            Name: d.Name,
+            Adress: d.Adress,
+            Grade: d.Grade,
+            Score: d.Score,
+            Latitude: d.Latitude,
+            Longitude: d.Longitude
+        };
+    }).then(drawPointsMO);
+
+
+// Setup plot region size variables
+var plotVars = ({
+    //Margin space for axes and their labels
+    plotCircleRadius: 1 //Radius in pixels of circles in the plot
+});
+
+// Set up size
+var mapWidth = 1000;
+var mapHeight = 750;
+
+// Set up projection that the map is using
+var scale = 190000;
+var projection = d3.geoMercator()
+    .center([-122.061578, 37.385532])
+    .scale(scale)
+    .translate([mapWidth / 2, mapHeight / 2]);
+
+
+
+// Draw the Data and enable text labels on 'mouseover events'.
+function drawPointsMO(restaurantData) {
+    svg.selectAll('circle')
+        .data(restaurantData)
+        .enter()
+        .append('circle')
+        .attr("class", "circles")
+        .attr("cx", function(d) {
+            return projection([d.Longitude, d.Latitude])[0];
+        })
+        .attr("cy", function(d) {
+            return projection([d.Longitude, d.Latitude])[1];
+        })
+        .attr('r', plotVars.plotCircleRadius)
+        .attr('fill', 'gray')
+        .on('mouseover', function(event, d) {
+            svg.append('text')
+                .attr('class', 'ptLabel')
+                .attr('x', event.x - 10)
+                .attr('y', event.y + 10)
+                .text("Name: " + d.Name)
+                .style('fill', 'black');
+
+            svg.append('text')
+                .attr('class', 'ptLabel')
+                .attr('x', event.x - 10)
+                .attr('y', event.y + 20)
+                .text("Score: " + d.Score)
+                .style('fill', 'black');
+        })
+        .on('mouseout', function(event, d) {
+            svg.selectAll('.ptLabel').remove()
+        });
+}
+
+// Draw circles
+circleA = svg.append('g')
+circleA.append('circle')
+    .attr("class", "radius")
+    .attr("id", "circleA")
+    .attr("r", circleARadius)
+    .attr("cx", circleACx)
+    .attr("cy", circleACy)
+    .attr("fill", "black")
+    .attr("opacity", ".2")
+    .call(d3.drag()
+        .on('start', dragStartA)
+        .on('drag', draggingA)
+        .on('end', dragEndA)
+    )
+
+circleB = svg.append('g')
+circleB.append('circle')
+    .attr("class", "radius")
+    .attr("id", "circleB")
+    .attr("r", circleBRadius)
+    .attr("cx", circleBCx)
+    .attr("cy", circleBCy)
+    .attr("fill", "black")
+    .attr("opacity", ".2")
+    .call(d3.drag()
+        .on('start', dragStartB)
+        .on('drag', draggingB)
+        .on('end', dragEndB)
+    )
+
+// Prototype functions
+Number.prototype.between = function getBetween(a, b) {
+    var min = Math.min.apply(Math, [a, b]),
+        max = Math.max.apply(Math, [a, b]);
+    return this > min && this < max;
+}
+
+
+function handleIntersection(restaurantData, svg) {
+        if (failuresSelected == false){
+        	d3.selectAll(".circles")
+        .attr('fill', 'gray')
+
+    d3.selectAll(".circles").filter(function(d) {
+            return (parseInt((d3.select(this).attr("cx"))).between((circleACx + circleARadius), (circleACx - circleARadius)) && parseInt((d3.select(this).attr("cx"))).between(circleBCx + circleBRadius - 10, circleBCx - circleBRadius + 10) && (parseInt((d3.select(this).attr("cy"))).between(circleACy + circleARadius - 10, circleACy - circleARadius + 10) && parseInt((d3.select(this).attr("cy"))).between(circleBCy + circleBRadius - 10, circleBCy - circleBRadius + 10)) && handleCollision(d3.select(this).attr("cx"), d3.select(this).attr("cy"), d3.select(this).attr("r") && d.Grade === 'Pass'));
+        })
+        .attr('fill', 'black');
+    }
+    else {
+    	d3.selectAll(".circles")
+        .attr('fill', function(d) {
+                    return d.Grade === 'Pass' ? 'none' : 'gray'
+                })
+    	d3.selectAll(".circles").filter(function(d) {
+            return (parseInt((d3.select(this).attr("cx"))).between((circleACx + circleARadius), (circleACx - circleARadius)) && parseInt((d3.select(this).attr("cx"))).between(circleBCx + circleBRadius - 10, circleBCx - circleBRadius + 10) && (parseInt((d3.select(this).attr("cy"))).between(circleACy + circleARadius - 10, circleACy - circleARadius + 10) && parseInt((d3.select(this).attr("cy"))).between(circleBCy + circleBRadius - 10, circleBCy - circleBRadius + 10)) && handleCollision(d3.select(this).attr("cx"), d3.select(this).attr("cy"), d3.select(this).attr("r") && d.Grade != 'Pass'));
+        })
+        .attr('fill', 'black')
+       	.attr('fill', function(d) {
+                    return d.Grade === 'Pass' ? 'none' : 'black'
+                });
+    }
+}
+
+function handleCollision(cX, cY, r) {
+	dx = cX - circleACx,
+    dy = cY - circleACy,
+    distanceA = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+
+    dxB = cX - circleBCx,
+    dyB = cY - circleBCy,
+    distanceB = Math.sqrt(Math.pow(dxB, 2) + Math.pow(dyB, 2));
+
+    if ((distanceA < (r + circleARadius)) && (distanceB < (r + circleBRadius))) {
+            return true;
+          }
+
+    else {
+    	return false;
+    }
+}
+
+
+// Setup the button handlers
+function handleButtons(restaurantData, svg, callback) {
+    let buttons = d3.selectAll('button');
+    let inputs = d3.selectAll('input');
+    buttons.on('click', function() { // Add 'click' event listeners and handlers
+        // In function working with D3 selection, 'this' refers to the current DOM node
+        let chosenButton = this.dataset.filter; //Value of the 'data-filter' attr of the button.
+
+
+        if (chosenButton === 'fail') {
+            svg.selectAll('.circles')
+                .attr('fill', function(d) {
+                    return d.Grade === 'Pass' ? 'none' : 'gray'
+                });
+        }
+
+        if (chosenButton === 'a_plus') {
+            circleARadius += 10
+            svg.select('#circleA')
+                .attr("r", circleARadius)
+        }
+
+        if (chosenButton === 'a_minus') {
+            circleARadius -= 10
+            svg.select('#circleA')
+                .attr("r", circleARadius)
+        }
+
+        if (chosenButton === 'b_plus') {
+            circleBRadius += 10
+            svg.select('#circleB')
+                .attr("r", circleBRadius)
+        }
+
+        if (chosenButton === 'b_minus') {
+            circleBRadius -= 10
+            svg.select('#circleB')
+                .attr("r", circleBRadius)
+        }
+
+        if (chosenButton === 'b_cx') {
+            circleBCx += 100
+            svg.select('#circleB')
+                .attr("cx", circleBCx)
+        }
+
+        if (chosenButton === 'b_cx_minus') {
+            circleBCx -= 100
+            svg.select('#circleB')
+                .attr("cx", circleBCx)
+        }
+
+        callback();
+    });
+
+    inputs.on('click', function() { 
+
+    	if (failuresSelected == false) {
+    		svg.selectAll('.circles')
+        	.attr('fill', function(d) {
+            	return d.Grade === 'Pass' ? 'none' : 'gray'
+        callback();
+            	});
+        	failuresSelected = true;
+    	}
+
+    	else {
+    		failuresSelected = false;
+    		callback();
+    	}
+    	
+        });
+}
+
+
+function dragStartA(event, d) {
+    console.log("drag started")
+    d3.select(this)
+        .style("stroke", "")
+}
+
+function draggingA(event, d) {
+    console.log("dragging")
+    var xCoor = event.x;
+    var yCoor = event.y;
+    circleACx = xCoor;
+    circleACy = yCoor;
+
+    d3.select(this)
+        .attr("cx", xCoor)
+        .attr("cy", yCoor);
+
+    handleIntersection(restaurantData, svg);
+}
+
+function dragEndA(event, d) {
+    d3.select(this)
+        .style("stroke", "black")
+    handleIntersection(restaurantData, svg);
+}
+
+function dragStartB(event, d) {
+    console.log("drag started")
+    d3.select(this)
+        .style("stroke", "")
+}
+
+function draggingB(event, d) {
+    console.log("dragging")
+    var xCoor = event.x;
+    var yCoor = event.y;
+    circleBCx = xCoor;
+    circleBCy = yCoor;
+
+    d3.select(this)
+        .attr("cx", xCoor)
+        .attr("cy", yCoor);
+
+    handleIntersection(restaurantData, svg);
+}
+
+function dragEndB(event, d) {
+    d3.select(this)
+        .style("stroke", "black")
+    handleIntersection(restaurantData, svg);
+}
+
+
+handleButtons(restaurantData, svg, handleIntersection);
+
+    </script>
+ <script type="text/javascript" src="js/materialize.min.js"></script>
+  </body>
+
+  
+</html>
