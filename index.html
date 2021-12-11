@@ -269,28 +269,28 @@ function handleIntersection(restaurantData, svg) {
     else if (check80s) {
         d3.selectAll(".circles")
         .attr('fill', function(d) {
-                    return d.Score >= 80 && d.Score < 90 ? 'none' : 'gray'
+                    return d.Score >= 80 ? 'none' : 'gray'
                 })
         d3.selectAll(".circles").filter(function(d) {
             return (parseInt((d3.select(this).attr("cx"))).between((circleACx + circleARadius), (circleACx - circleARadius)) && parseInt((d3.select(this).attr("cx"))).between(circleBCx + circleBRadius - 10, circleBCx - circleBRadius + 10) && (parseInt((d3.select(this).attr("cy"))).between(circleACy + circleARadius - 10, circleACy - circleARadius + 10) && parseInt((d3.select(this).attr("cy"))).between(circleBCy + circleBRadius - 10, circleBCy - circleBRadius + 10)) && handleCollision(d3.select(this).attr("cx"), d3.select(this).attr("cy"), d3.select(this).attr("r") && d.Grade != 'Pass'));
         })
         .attr('fill', 'black')
         .attr('fill', function(d) {
-                    return d.Score >= 80 && d.Score <90 ? 'none' : 'black'
+                    return d.Score >= 80 ? 'none' : 'black'
                 });
     }
 
     else if (check70s) {
         d3.selectAll(".circles")
         .attr('fill', function(d) {
-                    return d.Score >= 70 && d.Score < 80 ? 'none' : 'gray'
+                    return d.Score >= 70  ? 'none' : 'gray'
                 })
         d3.selectAll(".circles").filter(function(d) {
             return (parseInt((d3.select(this).attr("cx"))).between((circleACx + circleARadius), (circleACx - circleARadius)) && parseInt((d3.select(this).attr("cx"))).between(circleBCx + circleBRadius - 10, circleBCx - circleBRadius + 10) && (parseInt((d3.select(this).attr("cy"))).between(circleACy + circleARadius - 10, circleACy - circleARadius + 10) && parseInt((d3.select(this).attr("cy"))).between(circleBCy + circleBRadius - 10, circleBCy - circleBRadius + 10)) && handleCollision(d3.select(this).attr("cx"), d3.select(this).attr("cy"), d3.select(this).attr("r") && d.Grade != 'Pass'));
         })
         .attr('fill', 'black')
         .attr('fill', function(d) {
-                    return d.Score >= 70 && d.Score <80 ? 'none' : 'black'
+                    return d.Score >= 70 ? 'none' : 'black'
                 });
     }
     else {
@@ -427,7 +427,7 @@ function handleButtons(restaurantData, svg, callback) {
         if (check80si.checked == true) {
             svg.selectAll('.circles')
             .attr('fill', function(d) {
-                return d.Score >= 80 && d.Score < 90 ? 'none' : 'gray'
+                return d.Score >= 80 ? 'none' : 'gray'
         callback();
                 });
 
@@ -450,7 +450,7 @@ function handleButtons(restaurantData, svg, callback) {
         if (check70si.checked == true) {
             svg.selectAll('.circles')
             .attr('fill', function(d) {
-                return d.Score >= 70 && d.Score < 80 ? 'none' : 'gray'
+                return d.Score >= 70 ? 'none' : 'gray'
         callback();
                 });
 
