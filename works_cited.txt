@@ -7,3 +7,8 @@ D3 Collision detection https://alexzywiak.github.io/modelling-collision-detectio
 Materialize docs https://materializecss.com
 Observable animal data notebook
 Dragging circles example https://bl.ocks.org/puzzler10/9159a992f58aa4277c2583fa41f01ed0 
+Circle collision help: 
+- https://stackoverflow.com/questions/28647623/collision-overlap-detection-of-circles-in-a-d3-transition
+- https://bl.ocks.org/mbostock/3231298
+- https://observablehq.com/@d3/collision-detection/2
+

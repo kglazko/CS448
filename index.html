@@ -27,11 +27,11 @@
 </div>
 	<div class = "row">
 
-    <button class="btn waves-effect waves-light" id='a_plus' data-filter='a_plus' style='background-color: gray'>
+    <button class="btn waves-effect waves-light" id='a_plus' data-filter='a_plus' style='background-color: #DDA0DD'>
       Circle A Radius  <i class="material-icons left">add</i>
     </button>
 
-    <button class="btn waves-effect waves-light" id='a_minus' data-filter='a_minus' style='background-color: gray'>
+    <button class="btn waves-effect waves-light" id='a_minus' data-filter='a_minus' style='background-color: #DDA0DD'>
       Circle A Radius <i class="material-icons left">remove</i>
     </button>
 
@@ -167,7 +167,7 @@ circleA.append('circle')
     .attr("r", circleARadius)
     .attr("cx", circleACx)
     .attr("cy", circleACy)
-    .attr("fill", "black")
+    .attr("fill", "purple")
     .attr("opacity", ".2")
     .call(d3.drag()
         .on('start', dragStartA)
