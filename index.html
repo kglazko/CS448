@@ -14,16 +14,42 @@
     <h6>By Kate Glazko</h6>
 
   <div class = "row">
-  <div class="col s12">
-  	    <p>
+  <div class="col s2">
       <label>
-        <input type="checkbox" />
+        <input id ="checkfail" type="checkbox" />
         <span>Show Failures Only</span>
       </label>
-    </p>
 
 
   </div>
+
+  <div class="col s2">
+      <label>
+        <input id ="check90s" type="checkbox" />
+        <span>90+</span>
+      </label>
+
+
+  </div>
+
+  <div class="col s2">
+      <label>
+        <input id ="check80s" type="checkbox" />
+        <span>80-89</span>
+      </label>
+
+
+  </div>
+
+  <div class="col s2">
+      <label>
+        <input id ="check70s" type="checkbox" />
+        <span>70-79</span>
+      </label>
+
+
+  </div>
+
 </div>
 	<div class = "row">
 
@@ -49,6 +75,9 @@
 
 // Define checkbox global variable
 var failuresSelected = false;
+var check90s = false;
+var check80s = false;
+var check70s = false;
 
 // Define circle radii
 var circleARadius = 100;
@@ -199,7 +228,7 @@ Number.prototype.between = function getBetween(a, b) {
 
 
 function handleIntersection(restaurantData, svg) {
-        if (failuresSelected == false){
+        if (failuresSelected == false && check90s == false && check80s== false && check70s == false){
         	d3.selectAll(".circles")
         .attr('fill', 'gray')
 
@@ -208,18 +237,64 @@ function handleIntersection(restaurantData, svg) {
         })
         .attr('fill', 'black');
     }
-    else {
-    	d3.selectAll(".circles")
+
+    else if (failuresSelected) {
+        d3.selectAll(".circles")
         .attr('fill', function(d) {
                     return d.Grade === 'Pass' ? 'none' : 'gray'
                 })
-    	d3.selectAll(".circles").filter(function(d) {
+        d3.selectAll(".circles").filter(function(d) {
             return (parseInt((d3.select(this).attr("cx"))).between((circleACx + circleARadius), (circleACx - circleARadius)) && parseInt((d3.select(this).attr("cx"))).between(circleBCx + circleBRadius - 10, circleBCx - circleBRadius + 10) && (parseInt((d3.select(this).attr("cy"))).between(circleACy + circleARadius - 10, circleACy - circleARadius + 10) && parseInt((d3.select(this).attr("cy"))).between(circleBCy + circleBRadius - 10, circleBCy - circleBRadius + 10)) && handleCollision(d3.select(this).attr("cx"), d3.select(this).attr("cy"), d3.select(this).attr("r") && d.Grade != 'Pass'));
         })
         .attr('fill', 'black')
-       	.attr('fill', function(d) {
+        .attr('fill', function(d) {
                     return d.Grade === 'Pass' ? 'none' : 'black'
                 });
+    }
+
+    else if (check90s) {
+        d3.selectAll(".circles")
+        .attr('fill', function(d) {
+                    return d.Score >= 90 ? 'none' : 'gray'
+                })
+        d3.selectAll(".circles").filter(function(d) {
+            return (parseInt((d3.select(this).attr("cx"))).between((circleACx + circleARadius), (circleACx - circleARadius)) && parseInt((d3.select(this).attr("cx"))).between(circleBCx + circleBRadius - 10, circleBCx - circleBRadius + 10) && (parseInt((d3.select(this).attr("cy"))).between(circleACy + circleARadius - 10, circleACy - circleARadius + 10) && parseInt((d3.select(this).attr("cy"))).between(circleBCy + circleBRadius - 10, circleBCy - circleBRadius + 10)) && handleCollision(d3.select(this).attr("cx"), d3.select(this).attr("cy"), d3.select(this).attr("r") && d.Grade != 'Pass'));
+        })
+        .attr('fill', 'black')
+        .attr('fill', function(d) {
+                    return d.Score >= 90 ? 'none' : 'black'
+                });
+    }
+
+    else if (check80s) {
+        d3.selectAll(".circles")
+        .attr('fill', function(d) {
+                    return d.Score >= 80 && d.score < 90 ? 'none' : 'gray'
+                })
+        d3.selectAll(".circles").filter(function(d) {
+            return (parseInt((d3.select(this).attr("cx"))).between((circleACx + circleARadius), (circleACx - circleARadius)) && parseInt((d3.select(this).attr("cx"))).between(circleBCx + circleBRadius - 10, circleBCx - circleBRadius + 10) && (parseInt((d3.select(this).attr("cy"))).between(circleACy + circleARadius - 10, circleACy - circleARadius + 10) && parseInt((d3.select(this).attr("cy"))).between(circleBCy + circleBRadius - 10, circleBCy - circleBRadius + 10)) && handleCollision(d3.select(this).attr("cx"), d3.select(this).attr("cy"), d3.select(this).attr("r") && d.Grade != 'Pass'));
+        })
+        .attr('fill', 'black')
+        .attr('fill', function(d) {
+                    return d.Score >= 80 && d.score <90 ? 'none' : 'black'
+                });
+    }
+
+    else if (check70s) {
+        d3.selectAll(".circles")
+        .attr('fill', function(d) {
+                    return d.Score >= 70 && d.score < 80 ? 'none' : 'gray'
+                })
+        d3.selectAll(".circles").filter(function(d) {
+            return (parseInt((d3.select(this).attr("cx"))).between((circleACx + circleARadius), (circleACx - circleARadius)) && parseInt((d3.select(this).attr("cx"))).between(circleBCx + circleBRadius - 10, circleBCx - circleBRadius + 10) && (parseInt((d3.select(this).attr("cy"))).between(circleACy + circleARadius - 10, circleACy - circleARadius + 10) && parseInt((d3.select(this).attr("cy"))).between(circleBCy + circleBRadius - 10, circleBCy - circleBRadius + 10)) && handleCollision(d3.select(this).attr("cx"), d3.select(this).attr("cy"), d3.select(this).attr("r") && d.Grade != 'Pass'));
+        })
+        .attr('fill', 'black')
+        .attr('fill', function(d) {
+                    return d.Score >= 70 && d.score <80 ? 'none' : 'black'
+                });
+    }
+    else {
+    	
     }
 }
 
@@ -298,6 +373,106 @@ function handleButtons(restaurantData, svg, callback) {
     });
 
     inputs.on('click', function() { 
+
+        var checkfailsi = document.getElementById("checkfail");
+        var check90si = document.getElementById("check90s");
+        var check80si = document.getElementById("check80s");
+        var check70si = document.getElementById("check70s");
+
+        if (checkfaili.checked == true) {
+            svg.selectAll('.circles')
+            .attr('fill', function(d) {
+                return d.Grade === 'Pass' ? 'none' : 'gray'
+        callback();
+                });
+            check80si.checked = false;
+            check90si.checked = false;
+            check70si.checked = false;
+
+            check80s = false;
+            check90s = false;
+            check70s = false;
+
+            failuresSelected = true;
+        }
+
+        else {
+            failuresSelected = false;
+            callback();
+        }
+
+        if (check90si.checked == true) {
+            svg.selectAll('.circles')
+            .attr('fill', function(d) {
+                return d.Score >= 90 ? 'none' : 'gray'
+        callback();
+                });
+
+            check80si.checked = false;
+            check70si.checked = false;
+            checkfailsi.checked = false;
+
+            check80s = false;
+            check70s = false;
+            failuresSelected = false;
+
+            check90s = true;
+        }
+
+        else {
+            check90s = false;
+            callback();
+        }
+
+        if (check80si.checked == true) {
+            svg.selectAll('.circles')
+            .attr('fill', function(d) {
+                return d.Score >= 80 && d.Score < 90 ? 'none' : 'gray'
+        callback();
+                });
+
+            check70si.checked = false;
+            check90si.checked = false;
+            checkfailsi.checked = false;
+
+            check70s = false;
+            check90s = false;
+            failuresSelected = false;
+
+            check80s = true;
+        }
+        
+        else {
+            check80s = false;
+            callback();
+        }
+
+        if (check70si.checked == true) {
+            svg.selectAll('.circles')
+            .attr('fill', function(d) {
+                return d.Score >= 70 && d.Score < 80 ? 'none' : 'gray'
+        callback();
+                });
+
+            check80si.checked = false;
+            check90si.checked = false;
+            checkfailsi.checked = false;
+
+            check80s = false;
+            check90s = false;
+            failuresSelected = false;
+
+            check70s = true;
+        }
+
+        else {
+            check70s = false;
+            callback();
+        }
+
+
+
+
 
     	if (failuresSelected == false) {
     		svg.selectAll('.circles')
