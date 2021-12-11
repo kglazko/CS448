@@ -469,24 +469,6 @@ function handleButtons(restaurantData, svg, callback) {
             check70s = false;
             callback();
         }
-
-
-
-
-
-    	if (failuresSelected == false) {
-    		svg.selectAll('.circles')
-        	.attr('fill', function(d) {
-            	return d.Grade === 'Pass' ? 'none' : 'gray'
-        callback();
-            	});
-        	failuresSelected = true;
-    	}
-
-    	else {
-    		failuresSelected = false;
-    		callback();
-    	}
     	
         });
 }
