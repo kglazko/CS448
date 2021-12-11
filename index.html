@@ -379,7 +379,7 @@ function handleButtons(restaurantData, svg, callback) {
         var check80si = document.getElementById("check80s");
         var check70si = document.getElementById("check70s");
 
-        if (checkfaili.checked == true) {
+        if (checkfailsi.checked == true) {
             svg.selectAll('.circles')
             .attr('fill', function(d) {
                 return d.Grade === 'Pass' ? 'none' : 'gray'
